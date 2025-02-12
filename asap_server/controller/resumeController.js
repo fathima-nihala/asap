@@ -86,43 +86,57 @@ exports.uploadVideoResume = catchAsyncError(async (req, res) => {
 
 // Download resume
 exports.downloadResume = catchAsyncError(async (req, res) => {
-  const { type, id } = req.params;
-  const Model = type === 'video' ? VideoResume : Resume;
-
-  const resume = await Model.findOne({
-    _id: id,
-    userId: req.user.id
+    const { type, id } = req.params;
+    const Model = type === 'video' ? VideoResume : Resume;
+  
+    const file = await Model.findOne({
+      _id: id,
+      userId: req.user.id
+    });
+  
+    if (!file) {
+      throw createError(404, 'File not found');
+    }
+  
+    try {
+      await fs.access(file.filePath);
+      
+      const contentType = type === 'video' ? 'video/mp4' : 'application/pdf';
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Disposition', `attachment; filename="${file.fileName}"`);
+      
+      const fileStream = require('fs').createReadStream(file.filePath);
+      fileStream.pipe(res);
+    } catch (error) {
+      console.error('Download error:', error);
+      throw createError(404, 'File not found on server');
+    }
   });
 
-  if (!resume) {
-    throw createError(404, 'Resume not found');
-  }
 
-  res.download(resume.filePath, resume.fileName);
-});
 
-// Delete resume
-exports.deleteResume = catchAsyncError(async (req, res) => {
-  const { type, id } = req.params;
-  const Model = type === 'video' ? VideoResume : Resume;
+// // Delete resume
+// exports.deleteResume = catchAsyncError(async (req, res) => {
+//   const { type, id } = req.params;
+//   const Model = type === 'video' ? VideoResume : Resume;
 
-  const resume = await Model.findOne({
-    _id: id,
-    userId: req.user.id
-  });
+//   const resume = await Model.findOne({
+//     _id: id,
+//     userId: req.user.id
+//   });
 
-  if (!resume) {
-    throw createError(404, 'Resume not found');
-  }
+//   if (!resume) {
+//     throw createError(404, 'Resume not found');
+//   }
 
-  await fs.unlink(resume.filePath);
-  await resume.deleteOne();
+//   await fs.unlink(resume.filePath);
+//   await resume.deleteOne();
 
-  res.json({
-    success: true,
-    message: 'Resume deleted successfully'
-  });
-});
+//   res.json({
+//     success: true,
+//     message: 'Resume deleted successfully'
+//   });
+// });
 
 // Update resume
 exports.updateResume = catchAsyncError(async (req, res) => {
@@ -160,3 +174,57 @@ exports.updateResume = catchAsyncError(async (req, res) => {
     }
   });
 });
+
+
+// Delete document resume
+exports.deleteDocumentResume = catchAsyncError(async (req, res) => {
+    const resume = await Resume.findOne({
+      _id: req.params.id,
+      userId: req.user.id
+    });
+  
+    if (!resume) {
+      throw createError(404, 'Resume not found');
+    }
+  
+    try {
+      await fs.unlink(resume.filePath);
+    } catch (error) {
+      console.error('File delete error:', error);
+      // Continue with database deletion even if file doesn't exist
+    }
+  
+    await resume.deleteOne();
+  
+    res.json({
+      success: true,
+      message: 'Resume deleted successfully'
+    });
+  });
+  
+  // Delete video resume
+  exports.deleteVideoResume = catchAsyncError(async (req, res) => {
+    const video = await VideoResume.findOne({
+      _id: req.params.id,
+      userId: req.user.id
+    });
+  
+    if (!video) {
+      throw createError(404, 'Video resume not found');
+    }
+  
+    try {
+      await fs.unlink(video.filePath);
+    } catch (error) {
+      console.error('File delete error:', error);
+      // Continue with database deletion even if file doesn't exist
+    }
+  
+    await video.deleteOne();
+  
+    res.json({
+      success: true,
+      message: 'Video resume deleted successfully'
+    });
+  });
+  
