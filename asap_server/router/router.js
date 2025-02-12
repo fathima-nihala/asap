@@ -2,10 +2,11 @@ const router = require('express').Router();
 const { updateBasicInfo, getBasicInfo } = require('../controller/basicInfoController');
 const { updateCareerObjective, getCareerObjective } = require('../controller/careerController');
 const { educationAdd, educationEdit, educationDelete, getEducationByUser } = require('../controller/educationController');
+const { uploadResume, updateResume, deleteResume, uploadVideoResume, downloadResume } = require('../controller/resumeController');
 const { addSkill, getSkills, updateSkills, removeSkill } = require('../controller/skillController');
 const { register, login, logout, updateProfile } = require('../controller/userController');
 const { authCheck } = require('../middleware/authCheck');
-const { upload } = require('../middleware/multer');
+const { upload, resumeUpload, handleMulterErrors, videoUpload } = require('../middleware/multer');
 
 
 
@@ -33,6 +34,20 @@ router.route('/skill').post(authCheck,addSkill);
 router.route('/skill').get(authCheck,getSkills);
 router.route('/skill').put(authCheck,updateSkills);
 router.route('/skill/:id').delete(authCheck,removeSkill);
+
+//resume & videos
+router.route('/document').post(authCheck,resumeUpload.single('resume'),handleMulterErrors,uploadResume);
+router.route('/document/:id').put(authCheck,resumeUpload.single('resume'),handleMulterErrors,updateResume).delete(authCheck,deleteResume);
+
+router.route('/video').post(authCheck,videoUpload.single('video'),handleMulterErrors,uploadVideoResume);
+router.route('/video/:id').delete(authCheck,deleteResume);
+
+router.route('/download/:type/:id').get(authCheck, downloadResume);
+
+
+
+
+
 
 
 

@@ -28,6 +28,9 @@ const fileFilter = (req, file, cb) => {
     'video/mpeg',
     'video/quicktime',
     'image/avif',
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ];
 
   if (allowedTypes.includes(file.mimetype)) {
@@ -162,5 +165,64 @@ const handleMulterErrors = (err, req, res, next) => {
   next();
 };
 
+// Code for Resume
+const resumeStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './upload/resume/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname.split(".")[0].replaceAll(" ", "_").slice(0, 10) + Date.now() + path.extname(file.originalname));
+  }
+});
 
-module.exports = { upload, flexibleUpload, handleMulterErrors };
+const resumeUpload = multer({
+  storage: resumeStorage,
+  limits: {
+    fileSize: 1024 * 1024 * 5  // 5MB file size limit for resumes
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only PDF and Word files are allowed.'), false);
+    }
+  }
+});
+
+// Code for Video
+const videoStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './upload/videos/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname.split(".")[0].replaceAll(" ", "_").slice(0, 10) + Date.now() + path.extname(file.originalname));
+  }
+});
+
+const videoUpload = multer({
+  storage: videoStorage,
+  limits: {
+    fileSize: 1024 * 1024 * 100  // 100MB file size limit for videos
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = [
+      'video/mp4',
+      'video/mpeg',
+      'video/quicktime',
+      'video/avi',
+      'video/webm'
+    ];
+
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only video files are allowed.'), false);
+    }
+  }
+});
+
+
+
+module.exports = { upload, flexibleUpload, handleMulterErrors, resumeUpload, videoUpload };
