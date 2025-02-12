@@ -2,13 +2,13 @@ const router = require('express').Router();
 const { updateBasicInfo, getBasicInfo } = require('../controller/basicInfoController');
 const { updateCareerObjective, getCareerObjective } = require('../controller/careerController');
 const { educationAdd, educationEdit, educationDelete, getEducationByUser } = require('../controller/educationController');
-const { uploadResume, updateResume, deleteResume, uploadVideoResume, downloadResume, getUserResumes, deleteDocumentResume, deleteVideoResume } = require('../controller/resumeController');
+const { getPortfolio, updatePortfolio } = require('../controller/protfolioController');
+const { uploadResume, updateResume, uploadVideoResume, downloadResume, getUserResumes, deleteDocumentResume, deleteVideoResume } = require('../controller/resumeController');
 const { addSkill, getSkills, updateSkills, removeSkill } = require('../controller/skillController');
 const { register, login, logout, updateProfile } = require('../controller/userController');
+const { addWorkExperience, editWorkExperience } = require('../controller/workExpController');
 const { authCheck } = require('../middleware/authCheck');
 const { upload, resumeUpload, handleMulterErrors, videoUpload } = require('../middleware/multer');
-
-
 
 //user
 router.route('/reg').post(upload.none(), register);
@@ -45,6 +45,15 @@ router.route('/resumes/:id').delete(authCheck,deleteVideoResume);
 router.route('/resumes').get(authCheck, getUserResumes);
 router.route('/download/:type/:id').get(authCheck, downloadResume);
 
+//protfolio
+router.route('/portfolio')
+    .get(authCheck, getPortfolio)
+    .put(authCheck, updatePortfolio);
+
+
+//work experience
+router.route('/work').post(authCheck, addWorkExperience);
+router.route('/work/:id').put(authCheck, editWorkExperience);
 
 
 

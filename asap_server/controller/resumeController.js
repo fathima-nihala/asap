@@ -114,30 +114,6 @@ exports.downloadResume = catchAsyncError(async (req, res) => {
   });
 
 
-
-// // Delete resume
-// exports.deleteResume = catchAsyncError(async (req, res) => {
-//   const { type, id } = req.params;
-//   const Model = type === 'video' ? VideoResume : Resume;
-
-//   const resume = await Model.findOne({
-//     _id: id,
-//     userId: req.user.id
-//   });
-
-//   if (!resume) {
-//     throw createError(404, 'Resume not found');
-//   }
-
-//   await fs.unlink(resume.filePath);
-//   await resume.deleteOne();
-
-//   res.json({
-//     success: true,
-//     message: 'Resume deleted successfully'
-//   });
-// });
-
 // Update resume
 exports.updateResume = catchAsyncError(async (req, res) => {
   const { id } = req.params;
