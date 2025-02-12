@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./shared/Header";
 import Sidebar from "./component/Sidebar";
 import Profile from "./component/Profile";
 import Footer from "./shared/Footer";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
 
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 
 export const metadata: Metadata = {
   title: "ASAP",
@@ -28,15 +19,30 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-gray-100">
+      {/* <body className="bg-gray-100">
         <Header />
         <div className="flex container mx-auto py-2 lg:flex-row flex-col">
           <Profile/>
-          <main className="flex-1 p-4">{children}</main>
+          <main className="md:flex-1 p-4">{children}</main>
           <Sidebar />
         </div>
         <Footer/>
+      </body> */}
+
+      <body className="bg-gray-100">
+        <Header />
+        <div className="container mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
+          <div className="lg:w-1/4">
+            <Profile />
+          </div>
+          <main className="lg:w-1/2">{children}</main>
+          <div className="lg:w-1/4">
+            <Sidebar />
+          </div>
+        </div>
+        <Footer />
       </body>
+
     </html>
   );
 }

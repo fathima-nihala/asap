@@ -6,12 +6,11 @@ import ProgressBar from "../shared/ProgressBar";
 
 export default function Profile() {
     return (
-        <div className="w-full lg:max-w-lg mx-auto ">
+        <div className="w-full">
             <div className="bg-white shadow-lg rounded-2xl  p-4 border">
                 {/* Profile Section */}
                 <div className="flex flex-col items-center">
-
-                    <div className="relative w-32 h-32 rounded-full border-4 border-yellow-400 overflow-hidden">
+                    <div className="relative w-24 h-24 rounded-full border-4 border-yellow-400 overflow-hidden">
                         <Image
                             src="/user.png"
                             alt="Profile Picture"
@@ -20,7 +19,7 @@ export default function Profile() {
                         />
                     </div>
 
-                    <div className="flex items-center justify-center w-full lg:px-32  md:px-48 px-20">
+                    <div className="w-full lg:px-4  md:px-48 px-20">
                         <ProgressBar />
                     </div>
 
@@ -29,7 +28,7 @@ export default function Profile() {
                     <p className="text-gray-500">@abhisheks2024</p>
                 </div>
 
-                <div>
+                {/* <div> */}
                     {/* Contact Info */}
                     <div className="mt-4 space-y-2 text-gray-600">
                         <p className="flex items-center space-x-2">
@@ -38,7 +37,7 @@ export default function Profile() {
                         </p>
                         <p className="flex items-center space-x-2">
                             <Mail size={16} className="text-blue-500" />
-                            <span>abhisheksankar123@gmail.com</span>
+                            <span className="truncate">abhisheksankar123@gmail.com</span>
                             <span className="text-yellow-500">⚠️</span>
                         </p>
 
@@ -48,7 +47,7 @@ export default function Profile() {
                             Edit/Update Profile
                         </button>
                     </div>
-                </div>
+                {/* </div> */}
 
                 <div className="p-4 mt-4 bg-orange-100 rounded-md w-full">
                     {/* Navigation Menu */}
