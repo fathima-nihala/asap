@@ -2,9 +2,18 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import { RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const user = useSelector((state: RootState) => state.auth.user);
+  console.log(user,'yyy');
+
+  const nameInitial = user?.f_name ? user.f_name[0].toUpperCase() : '';
+  const fullName = user ? `Hi, ${user.f_name} ${user.l_name[0]}...` : 'Hi, Guest';
+
+  
 
   return (
     <header className="bg-white shadow-md p-4">
@@ -42,10 +51,11 @@ export default function Header() {
         {/* Right Section: Profile */}
         <div className="hidden lg:flex items-center space-x-2">
           <div className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center">
-            A
+            {nameInitial}
           </div>
-          <span className="text-gray-700 text-sm">Hi, Abhishek S...</span>
+          <span className="text-gray-700 text-sm">{fullName}</span>
         </div>
+
       </div>
     </header>
   );
