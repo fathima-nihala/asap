@@ -3,8 +3,20 @@
 import Image from "next/image";
 import { Edit, Mail, Phone, LogOut } from "lucide-react";
 import ProgressBar from "../shared/ProgressBar";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { logoutUser } from "../redux/features/authSlice";
+import { AppDispatch } from "../redux/store";
 
 export default function Profile() {
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        dispatch(logoutUser());
+        localStorage.removeItem("token");
+        router.push("/auth/login");
+    };
     return (
         <div className="w-full">
             <div className="bg-white shadow-lg rounded-2xl  p-4 border">
@@ -29,24 +41,24 @@ export default function Profile() {
                 </div>
 
                 {/* <div> */}
-                    {/* Contact Info */}
-                    <div className="mt-4 space-y-2 text-gray-600">
-                        <p className="flex items-center space-x-2">
-                            <Phone size={16} className="text-blue-500" />
-                            <span>+91 9876543210</span>
-                        </p>
-                        <p className="flex items-center space-x-2">
-                            <Mail size={16} className="text-blue-500" />
-                            <span className="truncate">abhisheksankar123@gmail.com</span>
-                            <span className="text-yellow-500">⚠️</span>
-                        </p>
+                {/* Contact Info */}
+                <div className="mt-4 space-y-2 text-gray-600">
+                    <p className="flex items-center space-x-2">
+                        <Phone size={16} className="text-blue-500" />
+                        <span>+91 9876543210</span>
+                    </p>
+                    <p className="flex items-center space-x-2">
+                        <Mail size={16} className="text-blue-500" />
+                        <span className="truncate">abhisheksankar123@gmail.com</span>
+                        <span className="text-yellow-500">⚠️</span>
+                    </p>
 
-                        {/* Edit Profile Link */}
-                        <button className="mt-4 text-blue-600  flex  items-center">
-                            <Edit size={16} className="" />
-                            Edit/Update Profile
-                        </button>
-                    </div>
+                    {/* Edit Profile Link */}
+                    <button className="mt-4 text-blue-600  flex  items-center">
+                        <Edit size={16} className="" />
+                        Edit/Update Profile
+                    </button>
+                </div>
                 {/* </div> */}
 
                 <div className="p-4 mt-4 bg-orange-100 rounded-md w-full">
@@ -67,15 +79,15 @@ export default function Profile() {
                     </div>
 
                     {/* Logout Button */}
-                    <button className="mt-4 w-full border border-orange-500 text-orange-500 py-2 rounded-md flex items-center justify-center hover:bg-orange-200 transition">
+                    <button className="mt-4 w-full border border-orange-500 text-orange-500 py-2 rounded-md flex items-center justify-center hover:bg-orange-200 transition" onClick={handleLogout}>
                         <LogOut size={16} className="mr-2" />
                         Logout
                     </button>
                 </div>
 
                 {/* Last Updated */}
-                </div>
-                <p className="mt-4 text-xs text-gray-400 text-start">Last updated on 10 Oct 2024</p>
             </div>
-            );
+            <p className="mt-4 text-xs text-gray-400 text-start">Last updated on 10 Oct 2024</p>
+        </div>
+    );
 }
