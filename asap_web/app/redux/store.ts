@@ -6,6 +6,7 @@ import { combineReducers } from "redux";
 import basicReducer from './features/basicInfoSlice';
 import educationReducer from './features/educationSlice';
 import careerReducer from './features/careerSlice';
+import skillReducer from './features/skillsSlice';
 
 
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   basicInfo: basicReducer,
   education: educationReducer,
   career: careerReducer,
+  skills: skillReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

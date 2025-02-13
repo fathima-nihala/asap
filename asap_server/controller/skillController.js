@@ -12,7 +12,6 @@ exports.getSkills = catchAsyncError(async (req, res) => {
         skills: []
       });
     }
-
     res.status(200).json(userSkills.skills);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching skills', error: error.message });
