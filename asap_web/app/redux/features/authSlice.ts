@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { AuthState, User, ApiError } from '../../types/auth.types';
 import Cookies from 'js-cookie'; 
+import { AppDispatch } from '../store';
 
 const initialState: AuthState = {
   user: null,
@@ -75,10 +76,13 @@ export const logoutUser = createAsyncThunk(
 export const updateProfile = createAsyncThunk<
   { user: User },
   FormData,
-  { rejectValue: string }
+  {
+    dispatch: AppDispatch;
+    rejectValue: string;
+  }
 >(
   'auth/updateProfile',
-  async (profileData, { rejectWithValue }) => {
+  async (profileData, { dispatch,rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token'); 
       const response = await axios.put<{ user: User }>(
@@ -92,6 +96,7 @@ export const updateProfile = createAsyncThunk<
           withCredentials: true,
         }
       );
+      await dispatch(loadUser());
       return response.data;
     } catch (error) {
       const err = error as AxiosError<ApiError>;
@@ -101,6 +106,35 @@ export const updateProfile = createAsyncThunk<
     }
   }
 );
+
+export const loadUser = createAsyncThunk<
+{ user: User },
+  void,
+  { rejectValue: string }
+>(
+  'auth/loadUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get<{ user: User }>(
+        `${process.env.NEXT_PUBLIC_API_URL}/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      return rejectWithValue(
+        err.response?.data?.message || err.message || 'Failed to load user'
+      );
+    }
+  }
+);
+
 
 const authSlice = createSlice({
   name: 'auth',
@@ -153,6 +187,21 @@ const authSlice = createSlice({
       .addCase(updateProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      //get user
+      .addCase(loadUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(loadUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.isAuthenticated = false;
       })
       // Logout
       .addCase(logoutUser.fulfilled, (state) => {

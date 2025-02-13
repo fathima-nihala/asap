@@ -117,3 +117,21 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
         }
     });
 });
+
+exports.getUserProfile = catchAsyncError(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return next(new ErrorHandler("User not found", 404));
+        }
+        res.status(200).json({
+            statusCode: 200,
+            success: true,
+            message: "User Details",
+            user
+        });
+    } catch (error) {
+        next(error); 
+    }
+});
+

@@ -5,7 +5,7 @@ const { educationAdd, educationEdit, educationDelete, getEducationByUser } = req
 const { getPortfolio, updatePortfolio } = require('../controller/protfolioController');
 const { uploadResume, updateResume, uploadVideoResume, downloadResume, getUserResumes, deleteDocumentResume, deleteVideoResume } = require('../controller/resumeController');
 const { addSkill, getSkills, updateSkills, removeSkill } = require('../controller/skillController');
-const { register, login, logout, updateProfile } = require('../controller/userController');
+const { register, login, logout, updateProfile, getUserProfile } = require('../controller/userController');
 const { addWorkExperience, editWorkExperience } = require('../controller/workExpController');
 const { authCheck } = require('../middleware/authCheck');
 const { upload, resumeUpload, handleMulterErrors, videoUpload } = require('../middleware/multer');
@@ -15,6 +15,8 @@ router.route('/reg').post(upload.none(), register);
 router.route('/login').post(login);
 router.route('/logout').get(logout);
 router.route('/update-profile').put(authCheck, upload.single('profile'), updateProfile);
+router.route('/me').get(authCheck,getUserProfile);
+
 
 //education
 router.route('/edu').post(authCheck,educationAdd);

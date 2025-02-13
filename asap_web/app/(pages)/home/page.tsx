@@ -2,18 +2,23 @@
 import { CheckCircle } from "lucide-react";
 import Breadcrumb from "../../shared/Breadcrumb";
 import { useProtectRoute } from "../../utils/protectRoute";
+import { useState } from "react";
+import BasicEdit from "./BasicEdit";
 
 export default function DashboardPage() {
   const isAuthenticated = useProtectRoute();
+      const [addBasicOpen, setAddBasicOpen] = useState<boolean>(false); 
+  
 
   if (!isAuthenticated) return null;
 
   return (
+    <>
     <div className="w-full">
       {/* Header with Breadcrumb and Update Button */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
         <Breadcrumb pageName="Basic Information" />
-        <button className="w-full sm:w-auto px-4 py-2 bg-blue-300 text-white rounded-md hover:bg-blue-600">
+        <button className="w-full sm:w-auto px-4 py-2 bg-blue-300 text-white rounded-md hover:bg-blue-600"  onClick={() => setAddBasicOpen(true)}>
           Update
         </button>
       </div>
@@ -76,5 +81,8 @@ export default function DashboardPage() {
       </div>
     </div>
 
+    <BasicEdit open={addBasicOpen} handleClose={() => setAddBasicOpen(false)} />
+
+    </>
   );
 }

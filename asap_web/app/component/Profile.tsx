@@ -5,7 +5,7 @@ import { Edit, Mail, Phone, LogOut } from "lucide-react";
 import ProgressBar from "../shared/ProgressBar";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { logoutUser } from "../redux/features/authSlice";
+import { loadUser, logoutUser } from "../redux/features/authSlice";
 import { AppDispatch, RootState } from "../redux/store";
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from "react";
@@ -20,11 +20,25 @@ export default function Profile() {
     const [addProfOpen, setAddProfOpen] = useState<boolean>(false); 
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        const token = localStorage.getItem('token');
+        if (!isAuthenticated && !token) {
             router.push("/login");
+        } else if (token) {
+            dispatch(loadUser());
         }
-    }, [isAuthenticated, router]);
+    
+    }, [isAuthenticated, router, dispatch]);
 
+    const formatDate = (dateString: string | undefined) => {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+        }).format(date);
+    };
+    
 
     const handleLogout = async () => {
         try {
@@ -54,6 +68,7 @@ export default function Profile() {
         const lastName = user?.l_name || '';
         return `${firstName} ${lastName}`.trim() || 'N/A';
     };
+    
 
 
     return (
@@ -127,7 +142,7 @@ export default function Profile() {
 
                 {/* Last Updated */}
             </div>
-            <p className="mt-4 text-xs text-gray-400 text-start">Last updated on 10 Oct 2024</p>
+            <p className="mt-4 text-xs text-gray-400 text-start">Last updated  {formatDate(user?.updatedAt)}</p>
         </div>
 
         <EditProfile open={addProfOpen} handleClose={() => setAddProfOpen(false)} initialData={user}/>
