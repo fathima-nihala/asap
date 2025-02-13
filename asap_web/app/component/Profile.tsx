@@ -77,7 +77,7 @@ export default function Profile() {
             <div className="bg-white shadow-lg rounded-2xl  p-4 border">
                 {/* Profile Section */}
                 <div className="flex flex-col items-center">
-                    <div className="relative w-24 h-24 rounded-full border-4 border-yellow-400 overflow-hidden">
+                    <div className="relative w-24 h-24 rounded-full border-4 border-dashed border-yellow-400 overflow-hidden">
                         <Image
                             src={user?.profile || "/user.png"}
                             alt="Profile Picture"
