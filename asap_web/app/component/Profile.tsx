@@ -3,28 +3,68 @@
 import Image from "next/image";
 import { Edit, Mail, Phone, LogOut } from "lucide-react";
 import ProgressBar from "../shared/ProgressBar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { logoutUser } from "../redux/features/authSlice";
-import { AppDispatch } from "../redux/store";
+import { AppDispatch, RootState } from "../redux/store";
+import { useSnackbar } from 'notistack';
+import { useEffect, useState } from "react";
+import EditProfile from "./EditProfile";
+
 
 export default function Profile() {
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
+    const { enqueueSnackbar } = useSnackbar();
+    const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+    const [addProfOpen, setAddProfOpen] = useState<boolean>(false); 
 
-    const handleLogout = () => {
-        dispatch(logoutUser());
-        localStorage.removeItem("token");
-        router.push("/auth/login");
+    useEffect(() => {
+        if (!isAuthenticated) {
+            router.push("/login");
+        }
+    }, [isAuthenticated, router]);
+
+
+    const handleLogout = async () => {
+        try {
+            await dispatch(logoutUser()).unwrap();
+            enqueueSnackbar('Logged out successfully!', { 
+                variant: 'success',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                }
+            });
+            router.push("/login");
+        } catch (error) {
+            enqueueSnackbar('Logout failed. Please try again.', { 
+                variant: 'error',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                }
+            });
+            console.error("Logout failed:", error);
+        }
     };
+
+    const getFullName = () => {
+        const firstName = user?.f_name || '';
+        const lastName = user?.l_name || '';
+        return `${firstName} ${lastName}`.trim() || 'N/A';
+    };
+
+
     return (
+        <>
         <div className="w-full">
             <div className="bg-white shadow-lg rounded-2xl  p-4 border">
                 {/* Profile Section */}
                 <div className="flex flex-col items-center">
                     <div className="relative w-24 h-24 rounded-full border-4 border-yellow-400 overflow-hidden">
                         <Image
-                            src="/user.png"
+                            src={user?.profile || "/user.png"}
                             alt="Profile Picture"
                             fill
                             className="object-cover rounded-full"
@@ -36,8 +76,8 @@ export default function Profile() {
                     </div>
 
                     {/* Name and Username */}
-                    <h2 className="mt-8 text-lg font-bold">Abhishek Shankar</h2>
-                    <p className="text-gray-500">@abhisheks2024</p>
+                    <h2 className="mt-8 text-lg font-bold">{getFullName()}</h2>
+                    <p className="text-gray-500">{user?.f_name}</p>
                 </div>
 
                 {/* <div> */}
@@ -45,16 +85,16 @@ export default function Profile() {
                 <div className="mt-4 space-y-2 text-gray-600">
                     <p className="flex items-center space-x-2">
                         <Phone size={16} className="text-blue-500" />
-                        <span>+91 9876543210</span>
+                        <span>{user?.phone}</span>
                     </p>
                     <p className="flex items-center space-x-2">
                         <Mail size={16} className="text-blue-500" />
-                        <span className="truncate">abhisheksankar123@gmail.com</span>
+                        <span className="truncate">{user?.email}</span>
                         <span className="text-yellow-500">⚠️</span>
                     </p>
 
                     {/* Edit Profile Link */}
-                    <button className="mt-4 text-blue-600  flex  items-center">
+                    <button className="mt-4 text-blue-600  flex  items-center"  onClick={() => setAddProfOpen(true)}>
                         <Edit size={16} className="" />
                         Edit/Update Profile
                     </button>
@@ -89,5 +129,8 @@ export default function Profile() {
             </div>
             <p className="mt-4 text-xs text-gray-400 text-start">Last updated on 10 Oct 2024</p>
         </div>
+
+        <EditProfile open={addProfOpen} handleClose={() => setAddProfOpen(false)} initialData={user}/>
+        </>
     );
 }

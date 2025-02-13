@@ -111,7 +111,9 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
             l_name: user.l_name,
             email: user.email,
             phone: user.phone,
-            profile: user.profile
+            profile: user.profile,
+            updatedAt: user.updatedAt 
+
         }
     });
 });

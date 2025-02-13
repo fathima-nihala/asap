@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const user = useSelector((state: RootState) => state.auth.user);
-  console.log(user,'yyy');
 
   const nameInitial = user?.f_name ? user.f_name[0].toUpperCase() : '';
   const fullName = user ? `Hi, ${user.f_name} ${user.l_name[0]}...` : 'Hi, Guest';

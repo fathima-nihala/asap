@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { AuthState, User, ApiError } from '../../types/auth.types';
+import Cookies from 'js-cookie'; 
 
 const initialState: AuthState = {
   user: null,
@@ -59,11 +60,43 @@ export const logoutUser = createAsyncThunk(
       const response = await axios.get<{ success: boolean }>(
         `${process.env.NEXT_PUBLIC_API_URL}/logout`
       );
+      Cookies.remove('token');
+      localStorage.removeItem('token');
       return response.data;
     } catch (error) {
       const err = error as AxiosError<ApiError>;
       return rejectWithValue(
         err.response?.data?.message || err.message || 'Logout failed'
+      );
+    }
+  }
+);
+
+export const updateProfile = createAsyncThunk<
+  { user: User },
+  FormData,
+  { rejectValue: string }
+>(
+  'auth/updateProfile',
+  async (profileData, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token'); 
+      const response = await axios.put<{ user: User }>(
+        `${process.env.NEXT_PUBLIC_API_URL}/update-profile`,
+        profileData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      return rejectWithValue(
+        err.response?.data?.message || err.message || 'Profile update failed'
       );
     }
   }
@@ -104,6 +137,20 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //update
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.error = null;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
