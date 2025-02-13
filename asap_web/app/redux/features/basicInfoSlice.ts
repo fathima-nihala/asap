@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { BasicInfo, BasicInfoResponse, User } from '../../types/basictype';
 
-
 interface BasicInfoState {
   user: User | null;
   basicInfo: BasicInfo | null;
@@ -10,14 +9,13 @@ interface BasicInfoState {
   error: string | null;
 }
 
-const initialState: BasicInfoState = { 
+const initialState: BasicInfoState = {
   user: null,
   basicInfo: null,
   loading: false,
   error: null,
 };
 
-// Async thunk to fetch basic info
 export const fetchBasicInfo = createAsyncThunk<
   BasicInfoResponse,
   void,
@@ -39,19 +37,18 @@ export const fetchBasicInfo = createAsyncThunk<
   }
 });
 
-// Async thunk to update basic info
 export const updateBasicInfo = createAsyncThunk<
   BasicInfoResponse,
-  BasicInfo,
+  Partial<BasicInfo & User>,
   { rejectValue: string }
->('basicInfo/updateBasicInfo', async (basicInfoData, { rejectWithValue }) => {
+>('basicInfo/updateBasicInfo', async (data, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');
     const response = await axios.put<BasicInfoResponse>(
       `${process.env.NEXT_PUBLIC_API_URL}/basic-info`,
-      basicInfoData,
+      data,
       {
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },

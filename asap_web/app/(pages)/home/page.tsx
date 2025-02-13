@@ -2,15 +2,32 @@
 import { CheckCircle } from "lucide-react";
 import Breadcrumb from "../../shared/Breadcrumb";
 import { useProtectRoute } from "../../utils/protectRoute";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BasicEdit from "./BasicEdit";
+import { fetchBasicInfo } from "@/app/redux/features/basicInfoSlice";
+import { AppDispatch, RootState } from "@/app/redux/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function DashboardPage() {
   const isAuthenticated = useProtectRoute();
       const [addBasicOpen, setAddBasicOpen] = useState<boolean>(false); 
-  
+      const dispatch = useDispatch<AppDispatch>();
 
+      const { user, basicInfo } = useSelector((state: RootState) => state.basicInfo);      
+
+      useEffect(() => {
+        dispatch(fetchBasicInfo());
+      }, [dispatch]);
+
+  
   if (!isAuthenticated) return null;
+
+  const formatDate = (date: string | undefined) => {
+    if (!date) return ""; 
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) return ""; 
+    return parsedDate.toLocaleDateString("en-US"); 
+  };
 
   return (
     <>
@@ -29,24 +46,24 @@ export default function DashboardPage() {
           {/* First Row */}
           <div className="space-y-1">
             <p className="text-gray-700 font-medium text-sm">Full Name</p>
-            <p className="text-gray-900">Abhishek Shankar</p>
-          </div>
+            <p className="text-gray-900">{user?.f_name} {user?.l_name}</p>
+          </div>  
 
           <div className="space-y-1">
             <p className="text-gray-700 font-medium text-sm">Date of Birth</p>
-            <p className="text-gray-900">18/10/1999</p>
+            <p className="text-gray-900">{formatDate(basicInfo?.dob)}</p>
           </div>
 
           <div className="space-y-1">
             <p className="text-gray-700 font-medium text-sm">Gender</p>
-            <p className="text-gray-900">Male</p>
+            <p className="text-gray-900">{basicInfo?.gender}</p>
           </div>
 
           {/* Second Row */}
           <div className="space-y-1">
             <p className="text-gray-700 font-medium text-sm">Mobile</p>
             <p className="text-gray-900 flex items-center gap-2">
-              +91 9876543210
+            {user?.phone}
               <CheckCircle className="text-green-500 flex-shrink-0" size={16} />
             </p>
           </div>
@@ -54,7 +71,7 @@ export default function DashboardPage() {
           <div className="space-y-1">
             <p className="text-gray-700 font-medium text-sm">Email</p>
             <p className="text-gray-900 flex items-center gap-2">
-              <span className="truncate">abhishekshankar123@gmail.com</span>
+              <span className="truncate">{user?.email}</span>
               <CheckCircle className="text-green-500 flex-shrink-0" size={16} />
             </p>
           </div>
@@ -62,7 +79,7 @@ export default function DashboardPage() {
           <div className="space-y-1">
             <p className="text-gray-700 font-medium text-sm">Aadhar</p>
             <div className="flex items-center gap-2">
-              <p className="text-gray-900">33XX XXXX XXXX XX22</p>
+              <p className="text-gray-900">{basicInfo?.aadhar}</p>
               <button className="bg-red-500 text-white px-3 py-1 text-xs rounded hover:bg-red-600 flex-shrink-0">
                 Verify
               </button>
@@ -73,15 +90,14 @@ export default function DashboardPage() {
           <div className="col-span-1 sm:col-span-2 lg:col-span-3 space-y-1">
             <p className="text-gray-700 font-medium text-sm">Address</p>
             <p className="text-gray-900">
-              Sweet Home, Evergreen Street, Varkkala, Thiruvananthapuram, Kerala,
-              695001, India
+            {basicInfo?.address}
             </p>
           </div>
         </div>
       </div>
     </div>
 
-    <BasicEdit open={addBasicOpen} handleClose={() => setAddBasicOpen(false)} />
+    <BasicEdit open={addBasicOpen} handleClose={() => setAddBasicOpen(false)} currentUser={user} currentBasicInfo={basicInfo} />
 
     </>
   );

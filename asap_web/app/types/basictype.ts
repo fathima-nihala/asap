@@ -19,6 +19,7 @@ export interface BasicInfo {
   
   export interface BasicInfoResponse {
     success: boolean;
+    message?: string;
     data: {
       user: User;
       basicInfo: BasicInfo | null;
