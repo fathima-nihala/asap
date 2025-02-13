@@ -5,6 +5,8 @@ import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
 import basicReducer from './features/basicInfoSlice';
 import educationReducer from './features/educationSlice';
+import careerReducer from './features/careerSlice';
+
 
 
 const persistConfig = {
@@ -16,6 +18,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   basicInfo: basicReducer,
   education: educationReducer,
+  career: careerReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
