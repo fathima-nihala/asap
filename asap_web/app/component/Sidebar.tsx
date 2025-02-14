@@ -17,7 +17,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-full p-4 h-screen">
+    <aside className="w-full p-4  h-full">
       <nav>
         <ul className="space-y-1">
           {menuItems.map(({ name, path }) => (
