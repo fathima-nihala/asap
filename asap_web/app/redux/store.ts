@@ -7,6 +7,7 @@ import basicReducer from './features/basicInfoSlice';
 import educationReducer from './features/educationSlice';
 import careerReducer from './features/careerSlice';
 import skillReducer from './features/skillsSlice';
+import resumeReducer from './features/resumeSlice';
 
 
 
@@ -21,6 +22,8 @@ const rootReducer = combineReducers({
   education: educationReducer,
   career: careerReducer,
   skills: skillReducer,
+  resume: resumeReducer,
+  
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

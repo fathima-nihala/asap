@@ -1,9 +1,32 @@
+// import type { NextConfig } from "next";
+
+// const nextConfig: NextConfig = {
+//   /* config options here */
+//   images: {
+//     domains: ["localhost"], 
+//   },
+// };
+
+// export default nextConfig;
+
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'standalone',
   images: {
+    unoptimized: true,
     domains: ["localhost"], 
+  },
+  // Add this if you're using rewrites or redirects
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/home', 
+        permanent: true,
+      },
+    ]
   },
 };
 

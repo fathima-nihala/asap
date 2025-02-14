@@ -20,8 +20,7 @@ const KeySkills = () => {
     useEffect(() => {
         const loadSkills = async () => {
             try {
-                const result = await dispatch(fetchSkills()).unwrap();
-                console.log('Fetched skills:', result);
+                await dispatch(fetchSkills()).unwrap();
             } catch (error) {
                 console.error('Error fetching skills:', error);
                 enqueueSnackbar('Failed to load skills', { variant: 'error' });
@@ -41,8 +40,7 @@ const KeySkills = () => {
 
         try {
             setIsAddingSkill(true);
-            const result = await dispatch(addSkill(newSkill.trim())).unwrap();
-            console.log('Added skill result:', result);
+             await dispatch(addSkill(newSkill.trim())).unwrap();
             setNewSkill('');
             enqueueSnackbar('Skill added successfully', { variant: 'success' });
         } catch (err) {
