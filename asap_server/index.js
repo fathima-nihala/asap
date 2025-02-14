@@ -26,25 +26,10 @@ app.use(cors({
     origin: ['https://asap-6.onrender.com', 'http://localhost:3000', 'https://asap-frontend.onrender.com','https://asap-8tcj-lyztynfr4-fathima-nihalas-projects.vercel.app'],
     credentials: true, 
     methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'], 
-    allowedHeaders: ['Content-Type', 'Authorization'], 
-    exposedHeaders: ['Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }));
 
-app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.sendStatus(204);
-});
-
 app.use(express.json());
-
-app.use((req, res, next) => {
-    console.log(`Incoming Request: ${req.method} ${req.url}`);
-    console.log('Origin:', req.headers.origin);
-    next();
-});
 
 mongoose.connect(process.env.MONGO_URL, {
 }).then(() => {
