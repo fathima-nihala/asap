@@ -127,7 +127,7 @@ const skillsSlice = createSlice({
       })
       .addCase(removeSkill.fulfilled, (state, action) => {
         state.loading = false;
-        state.skills = action.payload; // Set the updated skills array
+        state.skills = action.payload; 
       })
       .addCase(removeSkill.rejected, (state, action) => {
         state.loading = false;
