@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(cors({
     origin: ['https://asap-6.onrender.com', 'http://localhost:3000', 'https://asap-frontend.onrender.com','https://asap-8tcj-lyztynfr4-fathima-nihalas-projects.vercel.app'],
     credentials: true, 
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'], 
     allowedHeaders: ['Content-Type', 'Authorization'], 
   }));
 
