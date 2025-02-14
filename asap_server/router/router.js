@@ -15,7 +15,7 @@ router.route('/reg').post(upload.none(), register);
 router.route('/login').post(login);
 router.route('/logout').get(logout);
 router.route('/update-profile').put(authCheck,upload.single('profile'), updateProfile);
-router.route('/me').get(getUserProfile);
+router.route('/me').get(authCheck,getUserProfile);
 
 
 //education
