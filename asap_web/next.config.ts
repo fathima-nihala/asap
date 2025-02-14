@@ -1,19 +1,7 @@
-// import type { NextConfig } from "next";
-
-// const nextConfig: NextConfig = {
-//   /* config options here */
-//   images: {
-//     domains: ["localhost"], 
-//   },
-// };
-
-// export default nextConfig;
-
-
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  /* config options here */
   images: {
     unoptimized: true,
     domains: ["localhost"], 

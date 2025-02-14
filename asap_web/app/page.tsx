@@ -14,6 +14,8 @@ export default function Home() {
       router.push("/login");
     }
   };
+console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+
 
   return (
     <div

@@ -14,7 +14,7 @@ const { upload, resumeUpload, handleMulterErrors, videoUpload } = require('../mi
 router.route('/reg').post(upload.none(), register);
 router.route('/login').post(login);
 router.route('/logout').get(logout);
-router.route('/update-profile').put(authCheck, upload.single('profile'), updateProfile);
+router.route('/update-profile').put(authCheck,upload.single('profile'), updateProfile);
 router.route('/me').get(authCheck,getUserProfile);
 
 
