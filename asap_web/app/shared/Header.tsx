@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,19 +13,21 @@ export default function Header() {
   const nameInitial = user?.f_name ? user.f_name[0].toUpperCase() : '';
   const fullName = user ? `Hi, ${user.f_name} ${user.l_name[0]}...` : 'Hi, Guest';
 
-  
+
 
   return (
     <header className="bg-white shadow-md p-4">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="w-[150px] h-[55px] sm:w-[120px] sm:h-[40px] md:w-[150px] md:h-[60px] relative ">
-            <Image
-              src="/logo.png"
-              alt="ASAP Logo"
-              fill
-              className="object-contain"
-            />
+            <Link href="/home" >
+              <Image
+                src="/logo.png"
+                alt="ASAP Logo"
+                fill
+                className="object-contain"
+              />
+            </Link>
           </div>
         </div>
 

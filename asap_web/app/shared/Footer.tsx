@@ -10,11 +10,11 @@ const Footer = () => {
                 <div className="flex flex-col md:flex-row items-center justify-between p-4 gap-6">
                     <div className="w-[150px] h-[55px] sm:w-[120px] sm:h-[40px] md:w-[200px] md:h-[140px] relative ">
                         <Image
-                            src="/logo.png"
-                            alt="ASAP Logo"
-                            fill
-                            className="object-contain"
-                        />
+                                src="/logo.png"
+                                alt="ASAP Logo"
+                                fill
+                                className="object-contain"
+                            />
                     </div>
                     <div className="text-center md:text-left mt-4 md:mt-0">
                         <h3 className="font-semibold text-gray-700">Quick Links</h3>
