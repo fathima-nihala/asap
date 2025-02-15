@@ -67,3 +67,17 @@ exports.editWorkExperience = catchAsyncError(async (req, res, next) => {
     data: updatedWorkExperience
   });
 });
+
+// Get work experience of logged-in user
+exports.getWorkExperience = catchAsyncError(async (req, res, next) => {
+  const workExperiences = await WorkExperience.find({ userId: req.user._id });
+
+  if (!workExperiences.length) {
+    return next(new ErrorHandler('No work experience found', 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    data: workExperiences
+  });
+});

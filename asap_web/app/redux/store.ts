@@ -9,6 +9,7 @@ import careerReducer from './features/careerSlice';
 import skillReducer from './features/skillsSlice';
 import resumeReducer from './features/resumeSlice';
 import protfolioReducer from './features/protfolioSlice';
+import workReducer from './features/workSlice';
 
 
 
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   skills: skillReducer,
   resume: resumeReducer,
   portfolio: protfolioReducer,
+  workExperience: workReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

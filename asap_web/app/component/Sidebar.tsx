@@ -12,8 +12,7 @@ export default function Sidebar() {
     { name: 'Key Skills', path: '/key-skills' },
     { name: 'Resume', path: '/resume-portfolio' },
     { name: 'Portfolio', path: '/protfolio' },
-    { name: 'Preferences', path: '/preferences' },
-    { name: 'Work Experience', path: '/additional-documents' }
+    { name: 'Work Experience', path: '/work-experience' }
   ];
 
   return (

@@ -6,7 +6,7 @@ const { getPortfolio, updatePortfolio } = require('../controller/protfolioContro
 const { uploadResume, updateResume, uploadVideoResume, downloadResume, getUserResumes, deleteDocumentResume, deleteVideoResume } = require('../controller/resumeController');
 const { addSkill, getSkills, updateSkills, removeSkill } = require('../controller/skillController');
 const { register, login, logout, updateProfile, getUserProfile } = require('../controller/userController');
-const { addWorkExperience, editWorkExperience } = require('../controller/workExpController');
+const { addWorkExperience, editWorkExperience, getWorkExperience } = require('../controller/workExpController');
 const { authCheck } = require('../middleware/authCheck');
 const { upload, resumeUpload, handleMulterErrors, videoUpload } = require('../middleware/multer');
 
@@ -56,6 +56,8 @@ router.route('/portfolio')
 //work experience
 router.route('/work').post(authCheck, addWorkExperience);
 router.route('/work/:id').put(authCheck, editWorkExperience);
+router.route('/work').get(authCheck, getWorkExperience);
+
 
 
 
