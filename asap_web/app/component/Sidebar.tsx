@@ -10,10 +10,10 @@ export default function Sidebar() {
     { name: 'Education', path: '/education' },
     { name: 'Career Objective', path: '/career-objective' },
     { name: 'Key Skills', path: '/key-skills' },
-    { name: 'Resume/Portfolio', path: '/resume-portfolio' },
+    { name: 'Resume', path: '/resume-portfolio' },
+    { name: 'Portfolio', path: '/protfolio' },
     { name: 'Preferences', path: '/preferences' },
-    { name: 'Work Experience', path: '/work-experience' },
-    { name: 'Additional Documents', path: '/additional-documents' }
+    { name: 'Work Experience', path: '/additional-documents' }
   ];
 
   return (
