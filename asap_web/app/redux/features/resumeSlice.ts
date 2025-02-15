@@ -139,6 +139,39 @@ export const deleteVideoResume = createAsyncThunk(
   }
 );
 
+export const downloadResume = createAsyncThunk(
+    'resumes/download',
+    async ({ type, id }: { type: 'document' | 'video'; id: string }, { rejectWithValue }) => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(
+          `${API_URL}/download/${type}/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            responseType: 'blob'
+          }
+        );
+        
+        const blob = new Blob([response.data]);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const extension = type === 'video' ? 'mp4' : 'pdf';
+        link.setAttribute('download', `resume.${extension}`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+        
+        return true;
+      } catch (error) {
+        const err = error as AxiosError;
+        return rejectWithValue((err.response?.data as ErrorResponse)?.message || 'Failed to download file');
+      }
+    }
+  );
+  
+
 const resumesSlice = createSlice({
   name: 'resumes',
   initialState,

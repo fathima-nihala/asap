@@ -11,7 +11,8 @@ import {
     updateDocumentResume,
     deleteDocumentResume,
     deleteVideoResume,
-    clearError
+    clearError,
+    downloadResume
 } from '../../redux/features/resumeSlice';
 import { RootState } from '@/app/redux/store';
 import Breadcrumb from '@/app/shared/Breadcrumb';
@@ -53,7 +54,7 @@ const ResumeUpload = () => {
         setIsUploading(true);
         setUploadType('document');
         const formData = new FormData();
-        formData.append('resume', file); 
+        formData.append('resume', file);
 
         try {
             await dispatch(uploadDocumentResume(formData)).unwrap();
@@ -82,11 +83,11 @@ const ResumeUpload = () => {
         setIsUploading(true);
         setUploadType('video');
         const formData = new FormData();
-        formData.append('video', file); 
+        formData.append('video', file);
         try {
             await dispatch(uploadVideoResume(formData)).unwrap();
             enqueueSnackbar('Video resume uploaded successfully', { variant: 'success' });
-            e.target.value = ''; 
+            e.target.value = '';
         } catch (error) {
             if (typeof error === 'string') {
                 enqueueSnackbar(error, { variant: 'error' });
@@ -102,12 +103,12 @@ const ResumeUpload = () => {
         if (!file) return;
 
         const formData = new FormData();
-        formData.append('resume', file); 
+        formData.append('resume', file);
 
         try {
             await dispatch(updateDocumentResume({ id, formData })).unwrap();
             enqueueSnackbar('Document resume updated successfully', { variant: 'success' });
-            e.target.value = ''; 
+            e.target.value = '';
         } catch (error) {
             if (typeof error === 'string') {
                 enqueueSnackbar(error, { variant: 'error' });
@@ -143,6 +144,18 @@ const ResumeUpload = () => {
         }
     };
 
+    const handleDownload = async ({ type, id }: { type: "document" | "video"; id: string }) => {
+        try {
+            await dispatch(downloadResume({ type, id })).unwrap();
+            enqueueSnackbar("Download started successfully", { variant: "success" });
+        } catch (error) {
+            console.error(error);
+            enqueueSnackbar("Failed to download file", { variant: "error" });
+        }
+    };
+
+
+
     const renderUploadingState = () => (
         <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -157,10 +170,12 @@ const ResumeUpload = () => {
         );
     }
 
+
+
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-8">
             <Breadcrumb pageName='Resume' />
-            
+
             {/* Document Resume Section */}
             <div className="border rounded-lg p-6 bg-white relative">
                 {isUploading && uploadType === 'document' && renderUploadingState()}
@@ -191,13 +206,19 @@ const ResumeUpload = () => {
                                 </div>
                             </div>
                             <div className="flex space-x-2">
-                                <a
+                                {/* <a
                                     href={`${process.env.NEXT_PUBLIC_API_URL}${doc.downloadUrl}`}
                                     className="p-2 hover:bg-gray-200 rounded-full transition-colors"
                                     download
                                 >
                                     <Download className="w-5 h-5 text-gray-500" />
-                                </a>
+                                </a> */}
+                                <button
+                                    onClick={() => handleDownload({ type: "document", id: doc._id })}
+                                    className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+                                >
+                                    <Download className="w-5 h-5 text-gray-500" />
+                                </button>
                                 <label className="p-2 hover:bg-gray-200 rounded-full transition-colors cursor-pointer">
                                     <Upload className="w-5 h-5 text-gray-500" />
                                     <input
@@ -251,13 +272,22 @@ const ResumeUpload = () => {
                                 </div>
                             </div>
                             <div className="flex space-x-2">
-                                <a
+                                {/* <a
                                     href={`${process.env.NEXT_PUBLIC_API_URL}${video.downloadUrl}`}
                                     className="p-2 hover:bg-gray-200 rounded-full transition-colors"
                                     download
                                 >
                                     <Download className="w-5 h-5 text-gray-500" />
-                                </a>
+                                </a> */}
+
+                                <button
+                                    onClick={() => handleDownload({ type: "video", id: video._id })}
+                                    className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+                                >
+                                    <Download className="w-5 h-5 text-gray-500" />
+                                </button>
+
+
                                 <button
                                     onClick={() => handleVideoDelete(video._id)}
                                     className="p-2 hover:bg-gray-200 rounded-full transition-colors"
